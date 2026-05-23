@@ -56,6 +56,11 @@ Follow these when writing or modifying code in this repo.
 - Shared tooling-only deps (eslint, prettier, typescript) live at the root.
 - Don't add a dependency for something the standard library or existing deps already do.
 
+### Documentation
+
+- Always keep [README.md](README.md) in sync with the code. If you change the layout, commands, ports, stack, or how host/remote wire together, update the README in the same change.
+- The README is the entry point for new contributors — treat outdated docs as a bug.
+
 ### Before you ship
 
 - `pnpm lint` is clean.
