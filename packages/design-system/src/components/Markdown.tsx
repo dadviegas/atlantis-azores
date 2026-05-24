@@ -22,7 +22,9 @@ const kindMap: Record<string, CalloutKind> = {
 };
 
 function extractCalloutKind(children: ReactNode): { kind: CalloutKind; stripped: ReactNode } | null {
-  const arr = Children.toArray(children);
+  const arr = Children.toArray(children).filter(
+    (c) => !(typeof c === 'string' && c.trim() === ''),
+  );
   const first = arr[0];
   if (!isValidElement(first) || first.type !== 'p') return null;
   const pProps = first.props as { children?: ReactNode };
@@ -32,7 +34,7 @@ function extractCalloutKind(children: ReactNode): { kind: CalloutKind; stripped:
   const match = head.match(calloutDirective);
   if (!match) return null;
   const kind = kindMap[match[1].toUpperCase()];
-  const rest = head.slice(match[0].length);
+  const rest = head.slice(match[0].length).replace(/^\s+/, '');
   const newP = (
     <p key="p">
       {rest}

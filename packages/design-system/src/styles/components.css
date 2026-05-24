@@ -26,7 +26,17 @@
 .atlas-root a { color: var(--accent); text-decoration: none; }
 .atlas-root a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-.prose { color: var(--ink); max-width: 70ch; }
+.prose { color: var(--ink); }
+.prose > p,
+.prose > ul,
+.prose > ol,
+.prose > h1,
+.prose > h2,
+.prose > h3,
+.prose > h4,
+.prose > h5,
+.prose > h6,
+.prose > blockquote { max-width: 70ch; }
 .prose h1, .prose h2, .prose h3, .prose h4 {
   font-family: var(--font-display);
   font-weight: 600; letter-spacing: -0.02em; line-height: 1.15;

@@ -18,10 +18,17 @@ import {
   TabGroup,
 } from "@atlantis/design-system";
 import { mountButton } from "remote/Button";
-import markdownSupport from "./content/markdown-support.md";
 import clustersDoc from "./content/clusters.md";
 import searchDoc from "./content/search.md";
 import architectureDoc from "./content/architecture.md";
+import mdInline from "./content/markdown/inline.md";
+import mdHeadings from "./content/markdown/headings.md";
+import mdLists from "./content/markdown/lists.md";
+import mdTables from "./content/markdown/tables.md";
+import mdCode from "./content/markdown/code.md";
+import mdCallouts from "./content/markdown/callouts.md";
+import mdKbd from "./content/markdown/kbd.md";
+import mdMermaid from "./content/markdown/mermaid.md";
 
 type Theme = "light" | "dark";
 type View =
@@ -31,25 +38,51 @@ type View =
   | "triggers"
   | "charts"
   | "docs"
+  | "markdown"
   | "architecture"
   | "settings";
 
-type DocId = "markdown" | "clusters" | "search";
-
-const docs: Record<DocId, string> = {
-  markdown: markdownSupport,
-  clusters: clustersDoc,
-  search: searchDoc,
-};
+type DocId = "clusters" | "search";
+const docs: Record<DocId, string> = { clusters: clustersDoc, search: searchDoc };
 const docTabs = [
-  { id: "markdown" as const, label: "Markdown support" },
   { id: "clusters" as const, label: "Clusters" },
   { id: "search" as const, label: "Atlas Search" },
+];
+
+type MdFeature =
+  | "inline"
+  | "headings"
+  | "lists"
+  | "tables"
+  | "code"
+  | "callouts"
+  | "kbd"
+  | "mermaid";
+const mdSources: Record<MdFeature, string> = {
+  inline: mdInline,
+  headings: mdHeadings,
+  lists: mdLists,
+  tables: mdTables,
+  code: mdCode,
+  callouts: mdCallouts,
+  kbd: mdKbd,
+  mermaid: mdMermaid,
+};
+const mdTabs = [
+  { id: "inline" as const, label: "Inline" },
+  { id: "headings" as const, label: "Headings" },
+  { id: "lists" as const, label: "Lists" },
+  { id: "tables" as const, label: "Tables" },
+  { id: "code" as const, label: "Code" },
+  { id: "callouts" as const, label: "Callouts" },
+  { id: "kbd" as const, label: "Keyboard" },
+  { id: "mermaid" as const, label: "Mermaid" },
 ];
 
 const THEME_KEY = "atlas.theme";
 const DOC_KEY = "atlas.doc";
 const VIEW_KEY = "atlas.view";
+const MD_KEY = "atlas.md";
 
 type NavItem = { id: View; label: string; icon: ReactElement };
 const navSections: { heading: string; items: NavItem[] }[] = [
@@ -67,6 +100,7 @@ const navSections: { heading: string; items: NavItem[] }[] = [
     heading: "Developer",
     items: [
       { id: "docs", label: "Documentation", icon: Icon.book },
+      { id: "markdown", label: "Markdown", icon: Icon.hash },
       { id: "architecture", label: "Architecture", icon: Icon.link },
     ],
   },
@@ -87,12 +121,17 @@ export function Dashboard() {
   });
   const [doc, setDoc] = useState<DocId>(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem(DOC_KEY) : null;
-    return saved === "clusters" || saved === "search" ? saved : "markdown";
+    return saved === "search" ? "search" : "clusters";
+  });
+  const [md, setMd] = useState<MdFeature>(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem(MD_KEY) : null;
+    return isMdFeature(saved) ? saved : "inline";
   });
 
   useEffect(() => localStorage.setItem(THEME_KEY, theme), [theme]);
   useEffect(() => localStorage.setItem(VIEW_KEY, view), [view]);
   useEffect(() => localStorage.setItem(DOC_KEY, doc), [doc]);
+  useEffect(() => localStorage.setItem(MD_KEY, md), [md]);
 
   return (
     <div
@@ -176,10 +215,12 @@ export function Dashboard() {
       >
         {view === "overview" && <OverviewView />}
         {view === "docs" && <DocsView doc={doc} setDoc={setDoc} />}
+        {view === "markdown" && <MarkdownSupportView md={md} setMd={setMd} />}
         {view === "architecture" && <ArchitectureView />}
-        {view !== "overview" && view !== "docs" && view !== "architecture" && (
-          <PlaceholderView title={titleFor(view)} />
-        )}
+        {view !== "overview" &&
+          view !== "docs" &&
+          view !== "markdown" &&
+          view !== "architecture" && <PlaceholderView title={titleFor(view)} />}
       </main>
     </div>
   );
@@ -193,8 +234,22 @@ function isView(v: string | null): v is View {
     v === "triggers" ||
     v === "charts" ||
     v === "docs" ||
+    v === "markdown" ||
     v === "architecture" ||
     v === "settings"
+  );
+}
+
+function isMdFeature(v: string | null): v is MdFeature {
+  return (
+    v === "inline" ||
+    v === "headings" ||
+    v === "lists" ||
+    v === "tables" ||
+    v === "code" ||
+    v === "callouts" ||
+    v === "kbd" ||
+    v === "mermaid"
   );
 }
 
@@ -206,6 +261,7 @@ function titleFor(view: View): string {
     case "triggers": return "Triggers";
     case "charts": return "Charts";
     case "docs": return "Documentation";
+    case "markdown": return "Markdown support";
     case "architecture": return "Architecture";
     case "settings": return "Settings";
   }
@@ -361,6 +417,43 @@ function DocsView({ doc, setDoc }: { doc: DocId; setDoc: (d: DocId) => void }) {
         <TabGroup tabs={docTabs} value={doc} onChange={setDoc} />
       </div>
       <Markdown>{docs[doc]}</Markdown>
+    </Surface>
+  );
+}
+
+function MarkdownSupportView({
+  md,
+  setMd,
+}: {
+  md: MdFeature;
+  setMd: (m: MdFeature) => void;
+}) {
+  return (
+    <Surface tone="base" padding={20}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 6,
+          flexWrap: "wrap",
+        }}
+      >
+        <H2 style={{ margin: 0 }}>Markdown support</H2>
+        <Badge kind="info">{mdTabs.length} features</Badge>
+        <div style={{ flex: 1 }} />
+        <Badge kind="neutral">{`content/markdown/${md}.md`}</Badge>
+      </div>
+      <Body style={{ color: "var(--ink-2)", marginBottom: 14 }}>
+        Each tab loads a separate <code>.md</code> file from
+        <code> apps/host/src/content/markdown/</code>, bundled via rspack&apos;s
+        <code> asset/source</code> rule, and rendered through the design system&apos;s
+        <code> &lt;Markdown /&gt;</code> component.
+      </Body>
+      <div style={{ marginBottom: 14 }}>
+        <TabGroup tabs={mdTabs} value={md} onChange={setMd} />
+      </div>
+      <Markdown>{mdSources[md]}</Markdown>
     </Surface>
   );
 }

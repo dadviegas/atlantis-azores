@@ -35,11 +35,18 @@ export function Mermaid({ children, className }: MermaidProps) {
           startOnLoad: false,
           theme,
           securityLevel: 'loose',
-          fontFamily: 'inherit',
         });
         const renderId = `mermaid-${uid}-${++counter}`;
         const { svg } = await mermaid.render(renderId, children);
-        if (!cancelled) target.innerHTML = svg;
+        if (cancelled) return;
+        target.innerHTML = svg;
+        const el = target.querySelector('svg');
+        if (el) {
+          el.style.maxWidth = '100%';
+          el.style.height = 'auto';
+          el.style.display = 'block';
+          el.style.margin = '0 auto';
+        }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : String(e));
       }
@@ -64,13 +71,14 @@ export function Mermaid({ children, className }: MermaidProps) {
       ref={ref}
       className={['atlas-mermaid', className].filter(Boolean).join(' ')}
       style={{
-        display: 'flex',
-        justifyContent: 'center',
+        display: 'block',
+        width: '100%',
         background: 'var(--surface)',
         border: '1px solid var(--border)',
         borderRadius: 'var(--radius)',
         padding: 16,
         margin: '1.2em 0',
+        boxSizing: 'border-box',
         overflow: 'auto',
       }}
     />
