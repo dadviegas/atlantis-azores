@@ -109,14 +109,20 @@ The `.prose` styles cover headings (h1–h6), lists (with decaying bullets for n
 
 ### The Atlas dashboard
 
-[apps/host/src/Dashboard.tsx](apps/host/src/Dashboard.tsx) renders a themed micro-app with an Atlas-style left rail (Overview, Database, Search, Triggers, Charts, Documentation, Markdown, Architecture, Settings) and a header (theme toggle + avatar). State that survives reloads lives in `localStorage`:
+[apps/host/src/Dashboard.tsx](apps/host/src/Dashboard.tsx) renders a themed engineering-notes site with an Atlas-style left rail and a header (theme toggle + avatar). The left rail has one **Engineering** section with four areas, each backed by ~16 subtopic notes:
+
+- **JavaScript** — variables & scope, types & coercion, closures, `this`, prototypes, classes, async, event loop, iterators, modules, errors, collections, memory & GC, modern features, pitfalls.
+- **TypeScript** — basic types, interfaces vs types, generics, narrowing, utility/mapped/conditional/template-literal types, declarations, `tsconfig`, strict mode, inference, decorators, type-level patterns, pitfalls.
+- **Styles & CSS** — selectors & specificity, cascade, box model, flexbox, grid, positioning, custom properties, responsive design, container queries, typography, color, transitions/animations, logical properties, modern features (`:has`, `@layer`, `@scope`), pitfalls.
+- **Module Federation** — why MF, host vs remote, exposes/remotes, shared deps, versioning, TS types, runtime loading, dynamic remotes, SSR, Rspack vs Webpack, error boundaries, testing, production, plus a walkthrough of this repo.
+
+Picking an area in the sidebar swaps the main view; a secondary nav (pill tabs) above the content lets you jump between that area's subtopics. Each subtopic is its own `.md` file under [apps/host/src/content/topics/&lt;area&gt;/](apps/host/src/content/topics/) — Rspack's `asset/source` rule turns them into strings at build time, and a per-area `_meta.ts` collects them into the `{ id, label, body }` list consumed by [content/areas.ts](apps/host/src/content/areas.ts). The Module Federation → **This repo** subtopic also embeds the federated `remote/Button` as a live demo.
+
+State that survives reloads lives in `localStorage`:
 
 - `atlas.theme` — `"light"` / `"dark"`
-- `atlas.view` — current left-nav selection
-- `atlas.doc` — active tab in Documentation
-- `atlas.md`  — active tab in Markdown
-
-The **Markdown** view is a self-documenting showcase: each tab loads a separate `.md` file from [apps/host/src/content/markdown/](apps/host/src/content/markdown/) via Rspack's `asset/source` rule, then renders it through the bespoke `<Markdown>` component. The **Architecture** view does the same with [architecture.md](apps/host/src/content/architecture.md), which uses Mermaid for the runtime topology, boot sequence, and build pipeline diagrams. The **Federated panel** in Overview embeds `remote/Button`.
+- `atlas.area` — current sidebar selection
+- `atlas.subtopic` — current secondary-nav selection within the area
 
 ### ESLint + Prettier
 
@@ -145,7 +151,7 @@ On `pnpm dev` each app prints a banner with its URL once its dev server is liste
 1. Browser hits `http://localhost:3000/` → host's `index.html` loads.
 2. Host bundle boots ([apps/host/src/index.ts](apps/host/src/index.ts)) and dynamically imports `./bootstrap` (required by MF so shared deps can initialize first).
 3. [bootstrap.tsx](apps/host/src/bootstrap.tsx) loads `tokens.css` + `components.css`, wraps everything in `LeafyGreenProvider`, and `createRoot(#root).render(<Dashboard />)`.
-4. `<Dashboard />` renders the sidebar + main view. When the user is on Overview, an effect calls `mountButton(ref, "Open in Compass")` on a host-owned `<div>`. MF runtime fetches `http://localhost:3001/remoteEntry.js`, then the chunk containing `Button.tsx`.
+4. `<Dashboard />` renders the sidebar + main view. When the user navigates to **Module Federation → This repo**, an effect calls `mountButton(ref, "Loaded from remote@:3001")` on a host-owned `<div>`. MF runtime fetches `http://localhost:3001/remoteEntry.js`, then the chunk containing `Button.tsx`.
 5. `mountButton` creates (or reuses, via `WeakMap`) a React root on the target and renders a LeafyGreen `<Button>` inside `LeafyGreenProvider`. React is loaded once via MF's shared scope.
 
 Open both http://localhost:3000 (federated dashboard) and http://localhost:3001 (remote standalone) to see the federated component in both contexts.
