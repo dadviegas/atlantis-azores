@@ -1,0 +1,514 @@
+/* ─────────────────────────────────────────────────────────────
+   Atlas — Design tokens
+   Palettes via [data-palette]; dark via [data-theme="dark"]
+   ───────────────────────────────────────────────────────────── */
+
+/* COVE — sage + cream + terracotta (warm, refined) */
+[data-palette="cove"] {
+  --bg:          #ede4d0;
+  --surface:     #f5ede0;
+  --surface-2:   #e1d4b5;
+  --surface-3:   #d1c096;
+  --ink:         #222a23;
+  --ink-2:       #586259;
+  --ink-3:       #8a9088;
+  --border:      #c9b88e;
+  --border-soft: #ddd0ad;
+  --primary:     #5d7a5b;
+  --primary-soft:#dae3cf;
+  --accent:      #c0563b;
+  --accent-soft: #eed3c5;
+  --warn:        #c98622;
+  --warn-soft:   #f3e0b3;
+  --danger:      #b13c39;
+  --danger-soft: #ecc8c4;
+  --info:        #4f7a8f;
+  --info-soft:   #d6e2e7;
+  --ok:          #5b7c4a;
+  --ok-soft:     #d8e0c8;
+  --code-bg:     #222a23;
+  --code-ink:    #ebe4d0;
+}
+[data-palette="cove"][data-theme="dark"] {
+  --bg:          #131815;
+  --surface:     #1c221d;
+  --surface-2:   #262d27;
+  --surface-3:   #303932;
+  --ink:         #ece4d2;
+  --ink-2:       #b3ad9c;
+  --ink-3:       #797872;
+  --border:      #353c37;
+  --border-soft: #262c27;
+  --primary:     #a4ba99;
+  --primary-soft:#2a342d;
+  --accent:      #e08470;
+  --accent-soft: #3a241e;
+  --warn:        #e3aa5a;
+  --warn-soft:   #38291b;
+  --danger:      #db6960;
+  --danger-soft: #3a2422;
+  --info:        #88adbb;
+  --info-soft:   #1f2a2f;
+  --ok:          #93b07a;
+  --ok-soft:     #232b1e;
+  --code-bg:     #0c1110;
+  --code-ink:    #ece4d2;
+}
+
+/* ATELIER — paper · ink · electric red (modern editorial) */
+[data-palette="atelier"] {
+  --bg:          #f2eee3;
+  --surface:     #faf6ea;
+  --surface-2:   #e8e0cb;
+  --surface-3:   #d6cbac;
+  --ink:         #1a1814;
+  --ink-2:       #4f4b40;
+  --ink-3:       #8a8576;
+  --border:      #cabfa0;
+  --border-soft: #e0d6b8;
+  --primary:     #1a1814;
+  --primary-soft:#e3deca;
+  --accent:      #e0432a;
+  --accent-soft: #f4cdbf;
+  --warn:        #d68a18;
+  --warn-soft:   #f3dcae;
+  --danger:      #b9342b;
+  --danger-soft: #efc8c0;
+  --info:        #2f4f9c;
+  --info-soft:   #d3dceb;
+  --ok:          #3c7553;
+  --ok-soft:     #cee2cf;
+  --code-bg:     #1a1814;
+  --code-ink:    #f2eee3;
+}
+[data-palette="atelier"][data-theme="dark"] {
+  --bg:          #0c0b08;
+  --surface:     #161410;
+  --surface-2:   #211e17;
+  --surface-3:   #2c281e;
+  --ink:         #f2eee3;
+  --ink-2:       #b1ac9b;
+  --ink-3:       #797367;
+  --border:      #2f2b22;
+  --border-soft: #1d1a13;
+  --primary:     #f2eee3;
+  --primary-soft:#2c281e;
+  --accent:      #ff6442;
+  --accent-soft: #3a201a;
+  --warn:        #ecaa3e;
+  --warn-soft:   #382812;
+  --danger:      #e5564a;
+  --danger-soft: #3a221e;
+  --info:        #7d9bdd;
+  --info-soft:   #1e2538;
+  --ok:          #74b078;
+  --ok-soft:     #1d2a1e;
+  --code-bg:     #050402;
+  --code-ink:    #f2eee3;
+}
+
+/* BOTANIC — deep teal · saffron · bone (jewel) */
+[data-palette="botanic"] {
+  --bg:          #e8e4d6;
+  --surface:     #f1ede0;
+  --surface-2:   #d8d2bc;
+  --surface-3:   #c2bb9c;
+  --ink:         #122524;
+  --ink-2:       #43534f;
+  --ink-3:       #818c87;
+  --border:      #b9b194;
+  --border-soft: #d3cdb1;
+  --primary:     #1f5d5a;
+  --primary-soft:#c8d8d4;
+  --accent:      #d49a26;
+  --accent-soft: #efd9a1;
+  --warn:        #d49a26;
+  --warn-soft:   #efd9a1;
+  --danger:      #b04230;
+  --danger-soft: #edc7bf;
+  --info:        #2e6a8a;
+  --info-soft:   #cbdce5;
+  --ok:          #3c7553;
+  --ok-soft:     #cee2cf;
+  --code-bg:     #122524;
+  --code-ink:    #e8e4d6;
+}
+[data-palette="botanic"][data-theme="dark"] {
+  --bg:          #0a1716;
+  --surface:     #122120;
+  --surface-2:   #1c2c2a;
+  --surface-3:   #243634;
+  --ink:         #e8e4d6;
+  --ink-2:       #abb0a4;
+  --ink-3:       #6f7872;
+  --border:      #283936;
+  --border-soft: #182624;
+  --primary:     #4d9b97;
+  --primary-soft:#1a302d;
+  --accent:      #f0b950;
+  --accent-soft: #3a2c14;
+  --warn:        #f0b950;
+  --warn-soft:   #3a2c14;
+  --danger:      #db6759;
+  --danger-soft: #3a221d;
+  --info:        #74a8c2;
+  --info-soft:   #1c2a32;
+  --ok:          #88b894;
+  --ok-soft:     #1f2c20;
+  --code-bg:     #061211;
+  --code-ink:    #e8e4d6;
+}
+
+/* TIDE — dusty blue · linen · mustard (Scandi confident) */
+[data-palette="tide"] {
+  --bg:          #e6e7e0;
+  --surface:     #f1f0e8;
+  --surface-2:   #d4d4c8;
+  --surface-3:   #babcab;
+  --ink:         #15212d;
+  --ink-2:       #475766;
+  --ink-3:       #7a8693;
+  --border:      #b5b6a4;
+  --border-soft: #cfd0bc;
+  --primary:     #406d8e;
+  --primary-soft:#cedae3;
+  --accent:      #d29031;
+  --accent-soft: #ecd7af;
+  --warn:        #d29031;
+  --warn-soft:   #ecd7af;
+  --danger:      #ad453c;
+  --danger-soft: #ebcfc9;
+  --info:        #406d8e;
+  --info-soft:   #cedae3;
+  --ok:          #5d8060;
+  --ok-soft:     #d4dec6;
+  --code-bg:     #15212d;
+  --code-ink:    #dbe2ea;
+}
+[data-palette="tide"][data-theme="dark"] {
+  --bg:          #0d141c;
+  --surface:     #161e28;
+  --surface-2:   #1f2934;
+  --surface-3:   #283340;
+  --ink:         #e3e6e4;
+  --ink-2:       #a3acb6;
+  --ink-3:       #6f767f;
+  --border:      #2a3744;
+  --border-soft: #18222c;
+  --primary:     #7eaad0;
+  --primary-soft:#1d2a36;
+  --accent:      #e3b35a;
+  --accent-soft: #3a2d16;
+  --warn:        #e3b35a;
+  --warn-soft:   #3a2d16;
+  --danger:      #db685d;
+  --danger-soft: #3a221d;
+  --info:        #84a7be;
+  --info-soft:   #1d2932;
+  --ok:          #8eaf78;
+  --ok-soft:     #1f2a1d;
+  --code-bg:     #060b13;
+  --code-ink:    #dbe2ea;
+}
+
+/* RISO — peach · indigo · bone (zine-y, playful) */
+[data-palette="riso"] {
+  --bg:          #f6e9d4;
+  --surface:     #fdf2dc;
+  --surface-2:   #f3d8b1;
+  --surface-3:   #ecbf83;
+  --ink:         #1c1d4f;
+  --ink-2:       #4d4f7e;
+  --ink-3:       #8585a5;
+  --border:      #e0c590;
+  --border-soft: #f0debc;
+  --primary:     #2d3494;
+  --primary-soft:#cccfe8;
+  --accent:      #ec6a82;
+  --accent-soft: #f8cfd5;
+  --warn:        #d68a18;
+  --warn-soft:   #f3dcae;
+  --danger:      #d23c4f;
+  --danger-soft: #f0c3c9;
+  --info:        #2d3494;
+  --info-soft:   #cccfe8;
+  --ok:          #3a8e6a;
+  --ok-soft:     #c8e2d4;
+  --code-bg:     #1c1d4f;
+  --code-ink:    #f6e9d4;
+}
+[data-palette="riso"][data-theme="dark"] {
+  --bg:          #0f1130;
+  --surface:     #181a3d;
+  --surface-2:   #22254c;
+  --surface-3:   #2c305d;
+  --ink:         #f6e9d4;
+  --ink-2:       #b3afbf;
+  --ink-3:       #7a778d;
+  --border:      #2c305d;
+  --border-soft: #1b1d44;
+  --primary:     #8e93dc;
+  --primary-soft:#202556;
+  --accent:      #ff8aa1;
+  --accent-soft: #3a1f2b;
+  --warn:        #ecaa3e;
+  --warn-soft:   #382812;
+  --danger:      #e7546a;
+  --danger-soft: #3a1d27;
+  --info:        #8e93dc;
+  --info-soft:   #202556;
+  --ok:          #7bb89a;
+  --ok-soft:     #1c2e26;
+  --code-bg:     #07081c;
+  --code-ink:    #f6e9d4;
+}
+
+/* CABIN — forest · oak · rust (cozy, deeper) */
+[data-palette="cabin"] {
+  --bg:          #e6dcc0;
+  --surface:     #f0e6c9;
+  --surface-2:   #d3c39a;
+  --surface-3:   #bba874;
+  --ink:         #1a2719;
+  --ink-2:       #455143;
+  --ink-3:       #7c8276;
+  --border:      #b6a378;
+  --border-soft: #d6c7a0;
+  --primary:     #2e4a2c;
+  --primary-soft:#c8d3c3;
+  --accent:      #b86b2b;
+  --accent-soft: #efcca6;
+  --warn:        #c98e2a;
+  --warn-soft:   #f1dfb1;
+  --danger:      #a8443d;
+  --danger-soft: #ebcec8;
+  --info:        #426f8a;
+  --info-soft:   #d2dee5;
+  --ok:          #4f7a3f;
+  --ok-soft:     #d4dfbf;
+  --code-bg:     #1a2719;
+  --code-ink:    #e8e3cf;
+}
+[data-palette="cabin"][data-theme="dark"] {
+  --bg:          #0f140d;
+  --surface:     #181f15;
+  --surface-2:   #21281d;
+  --surface-3:   #2a3225;
+  --ink:         #ebe2c9;
+  --ink-2:       #b1ad95;
+  --ink-3:       #797866;
+  --border:      #303829;
+  --border-soft: #1f261b;
+  --primary:     #88af74;
+  --primary-soft:#1d2a1c;
+  --accent:      #d99046;
+  --accent-soft: #3a2818;
+  --warn:        #e2a755;
+  --warn-soft:   #382a18;
+  --danger:      #d66358;
+  --danger-soft: #38201d;
+  --info:        #88a9bf;
+  --info-soft:   #1d2830;
+  --ok:          #95b27c;
+  --ok-soft:     #232c1c;
+  --code-bg:     #060a05;
+  --code-ink:    #e8e3cf;
+}
+
+/* Density */
+:root {
+  --d: 1;             /* density multiplier */
+  --base-font: 15px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 18px;
+
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --font-serif: 'Fraunces', 'Tiempos Text', Georgia, serif;
+  --font-display: var(--font-sans);
+}
+[data-density="compact"] { --d: 0.82; --base-font: 13.5px; }
+[data-density="comfy"]   { --d: 1;    --base-font: 15px;   }
+[data-density="airy"]    { --d: 1.18; --base-font: 16.5px; }
+
+/* ─────────────────────────────────────────────────────────────
+   Reset within .atlas-root so the canvas chrome stays intact
+   ───────────────────────────────────────────────────────────── */
+.atlas-root {
+  font-family: var(--font-sans);
+  font-size: var(--base-font);
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--bg);
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv11', 'ss01';
+}
+.atlas-root *,
+.atlas-root *::before,
+.atlas-root *::after { box-sizing: border-box; }
+.atlas-root button {
+  font-family: inherit; font-size: inherit; color: inherit;
+  background: none; border: 0; cursor: pointer; padding: 0;
+}
+.atlas-root input {
+  font-family: inherit; font-size: inherit; color: inherit;
+  background: none; border: 0; outline: 0;
+}
+.atlas-root a { color: var(--accent); text-decoration: none; }
+.atlas-root a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ─────────────────────────────────────────────────────────────
+   Article typography
+   ───────────────────────────────────────────────────────────── */
+.prose { color: var(--ink); max-width: 70ch; }
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  font-family: var(--font-display);
+  font-weight: 600; letter-spacing: -0.02em; line-height: 1.15;
+  margin: 0 0 0.5em;
+}
+.prose h1 { font-size: calc(2.6em * var(--d)); font-weight: 500;
+  font-family: 'Fraunces', 'Tiempos Text', Georgia, serif;
+  font-variation-settings: '"opsz" 144';
+  letter-spacing: -0.03em; }
+.prose h2 {
+  font-family: 'Fraunces', 'Tiempos Text', Georgia, serif;
+  font-variation-settings: '"opsz" 60';
+  font-size: calc(1.7em * var(--d));
+  font-weight: 500;
+  margin-top: 1.8em;
+  padding-bottom: .25em;
+  position: relative;
+  display: flex; align-items: center; gap: 12px;
+}
+.prose h2::before {
+  content: '';
+  width: 28px; height: 1.5px;
+  background: var(--accent);
+  display: inline-block;
+  flex-shrink: 0;
+}
+.prose h2::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--border);
+  margin-left: 4px;
+}
+.prose h3 { font-size: calc(1.25em * var(--d)); margin-top: 1.4em; color: var(--ink);
+  font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+  font-variation-settings: '"opsz" 30'; }
+.prose h4 { font-size: calc(1.05em * var(--d)); margin-top: 1.2em; color: var(--ink-2);
+  text-transform: uppercase; letter-spacing: .12em; font-size: .82em; font-weight: 600; }
+.prose p { margin: 0 0 1em; line-height: 1.65; }
+.prose p, .prose li { text-wrap: pretty; }
+.prose strong { font-weight: 600; color: var(--ink); }
+.prose em { font-style: italic; }
+
+.prose ul, .prose ol { margin: 0 0 1em; padding-left: 1.4em; }
+.prose ul li, .prose ol li { margin: .25em 0; line-height: 1.6; }
+.prose ul { list-style: none; padding-left: 1em; }
+.prose ul > li { position: relative; padding-left: 1em; }
+.prose ul > li::before {
+  content: ''; position: absolute; left: 0; top: .65em;
+  width: .35em; height: .35em; border-radius: 50%;
+  background: var(--primary);
+}
+
+.prose blockquote {
+  margin: 1.2em 0;
+  padding: .6em 1.2em;
+  border-left: 3px solid var(--primary);
+  background: var(--primary-soft);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+  color: var(--ink-2);
+}
+.prose blockquote p { margin: 0; }
+.prose blockquote p + p { margin-top: .5em; }
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: .87em;
+  background: var(--surface-2);
+  color: var(--ink);
+  padding: .1em .4em;
+  border-radius: 4px;
+  border: 1px solid var(--border-soft);
+}
+
+.prose hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+  margin: 2em 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.2em 0;
+  font-size: .94em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.prose th, .prose td {
+  padding: calc(.7em * var(--d)) 1em;
+  text-align: left;
+  border-bottom: 1px solid var(--border-soft);
+}
+.prose thead th {
+  background: var(--surface-2);
+  font-weight: 600;
+  font-size: .82em;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink-2);
+}
+.prose tbody tr:last-child td { border-bottom: 0; }
+.prose tbody tr:hover { background: var(--surface-2); }
+
+.prose figure { margin: 1.4em 0; }
+.prose figcaption {
+  font-size: .85em;
+  color: var(--ink-3);
+  text-align: center;
+  margin-top: .6em;
+  font-style: italic;
+}
+
+.prose a { border-bottom: 1px dotted var(--accent); }
+.prose a:hover { border-bottom-style: solid; text-decoration: none; }
+
+/* Scrollbar style for any scrollables */
+.atlas-scroll { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.atlas-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.atlas-scroll::-webkit-scrollbar-track { background: transparent; }
+.atlas-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.atlas-scroll::-webkit-scrollbar-thumb:hover { background: var(--ink-3); background-clip: content-box; border: 2px solid transparent; }
+
+/* Custom selection */
+.atlas-root ::selection { background: var(--accent-soft); color: var(--ink); }
+
+/* Animation utilities */
+@keyframes atlasFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes atlasFadeInScale { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
+@keyframes atlasSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes atlasPulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+@keyframes atlasShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes atlasDrawLine { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
+
+.atlas-fade-in { animation: atlasFadeIn .3s ease-out both; }
+
+/* Sidebar collapse transition */
+.atlas-grid {
+  transition: grid-template-columns .25s cubic-bezier(.2,.7,.3,1);
+}
