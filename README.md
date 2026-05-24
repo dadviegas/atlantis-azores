@@ -109,14 +109,18 @@ The `.prose` styles cover headings (h1–h6), lists (with decaying bullets for n
 
 ### The Atlas dashboard
 
-[apps/host/src/Dashboard.tsx](apps/host/src/Dashboard.tsx) renders a themed engineering-notes site with an Atlas-style left rail and a header (theme toggle + avatar). The left rail has one **Engineering** section with four areas, each backed by ~16 subtopic notes:
+[apps/host/src/Dashboard.tsx](apps/host/src/Dashboard.tsx) renders a themed engineering-notes site with an Atlas-style left rail and a header (theme toggle + avatar). The left rail is split into two sections, each holding areas with ~16 subtopic notes apiece:
 
+**Languages**
 - **JavaScript** — variables & scope, types & coercion, closures, `this`, prototypes, classes, async, event loop, iterators, modules, errors, collections, memory & GC, modern features, pitfalls.
 - **TypeScript** — basic types, interfaces vs types, generics, narrowing, utility/mapped/conditional/template-literal types, declarations, `tsconfig`, strict mode, inference, decorators, type-level patterns, pitfalls.
 - **Styles & CSS** — selectors & specificity, cascade, box model, flexbox, grid, positioning, custom properties, responsive design, container queries, typography, color, transitions/animations, logical properties, modern features (`:has`, `@layer`, `@scope`), pitfalls.
-- **Module Federation** — why MF, host vs remote, exposes/remotes, shared deps, versioning, TS types, runtime loading, dynamic remotes, SSR, Rspack vs Webpack, error boundaries, testing, production, plus a walkthrough of this repo.
 
-Picking an area in the sidebar swaps the main view; a secondary nav (pill tabs) above the content lets you jump between that area's subtopics. Each subtopic is its own `.md` file under [apps/host/src/content/topics/&lt;area&gt;/](apps/host/src/content/topics/) — Rspack's `asset/source` rule turns them into strings at build time, and a per-area `_meta.ts` collects them into the `{ id, label, body }` list consumed by [content/areas.ts](apps/host/src/content/areas.ts). The Module Federation → **This repo** subtopic also embeds the federated `remote/Button` as a live demo.
+**Tooling**
+- **Module Federation** — why MF, host vs remote, exposes/remotes, shared deps, versioning, TS types, runtime loading, dynamic remotes, SSR, Rspack vs Webpack, error boundaries, testing, production, plus a walkthrough of this repo.
+- **Frontend Infrastructure** — bundlers landscape, Webpack vs Rspack, Vite, transpilers (Babel/SWC/tsc/esbuild), loaders & plugins, code splitting, tree shaking, source maps, assets, dev server & HMR, build perf, monorepos, package managers, CI/CD, bundle analysis.
+
+Picking an area in the sidebar swaps the main view; a secondary nav (pill tabs) above the content lets you jump between that area's subtopics. Each subtopic is its own `.md` file under [apps/host/src/content/topics/&lt;area&gt;/](apps/host/src/content/topics/) — Rspack's `asset/source` rule turns them into strings at build time, and a per-area `_meta.ts` collects them into the `{ id, label, body }` list. [content/areas.ts](apps/host/src/content/areas.ts) groups the areas into the two sidebar sections. The Module Federation → **This repo** subtopic also embeds the federated `remote/Button` as a live demo.
 
 State that survives reloads lives in `localStorage`:
 

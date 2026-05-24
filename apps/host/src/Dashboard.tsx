@@ -9,7 +9,7 @@ import {
   Surface,
 } from "@atlantis/design-system";
 import { mountButton } from "remote/Button";
-import { areas, areaById, findSubtopic, type Area } from "./content/areas";
+import { areas, areaById, findSubtopic, groups, type Area } from "./content/areas";
 
 type Theme = "light" | "dark";
 
@@ -22,6 +22,7 @@ const areaIcons: Record<string, ReactElement> = {
   typescript: Icon.ts,
   css: Icon.css,
   "module-federation": Icon.federation,
+  "frontend-infrastructure": Icon.bolt,
 };
 
 const defaultArea = areas[0].id;
@@ -93,12 +94,15 @@ export function Dashboard() {
           <Badge kind="info">notes</Badge>
         </div>
 
-        <NavSection
-          heading="Engineering"
-          areas={areas}
-          currentArea={area.id}
-          onSelect={selectArea}
-        />
+        {groups.map((group) => (
+          <NavSection
+            key={group.heading}
+            heading={group.heading}
+            areas={group.areas}
+            currentArea={area.id}
+            onSelect={selectArea}
+          />
+        ))}
       </aside>
 
       <header
