@@ -5,11 +5,13 @@ A minimal **micro-frontend** scaffold: two TypeScript apps built with **Rspack**
 ```
 atlantis-azores/
 ├── apps/
-│   ├── host/      → shell app    (http://localhost:3000)
-│   └── remote/    → exposes UI   (http://localhost:3001)
-├── rspack.shared.cjs   → shared Rspack config factory
-├── tsconfig.base.json  → shared TS compiler options
-├── eslint.config.js    → flat ESLint config (workspace-wide)
+│   ├── host/             → shell app    (http://localhost:3000)
+│   └── remote/           → exposes UI   (http://localhost:3001)
+├── packages/
+│   └── design-system/    → @atlantis/design-system (tokens + React primitives)
+├── rspack.shared.cjs     → shared Rspack config factory
+├── tsconfig.base.json    → shared TS compiler options
+├── eslint.config.js      → flat ESLint config (workspace-wide)
 └── pnpm-workspace.yaml
 ```
 
@@ -53,6 +55,34 @@ The TS contract for the federated import lives in [apps/host/src/remote.d.ts](ap
 ### TypeScript
 
 `strict` is on across the workspace via [tsconfig.base.json](tsconfig.base.json), which each app extends. `ts-loader` compiles inside Rspack; there's no separate `tsc` build step in the dev loop.
+
+### Design system
+
+[packages/design-system/](packages/design-system/) ships as `@atlantis/design-system`. It's a **source-only** package — no build step. Apps import TSX directly; their Rspack/ts-loader pipeline transpiles it. Token CSS and base styles ship as separate stylesheet entries.
+
+Layers:
+
+- **Tokens** ([src/styles/tokens.css](packages/design-system/src/styles/tokens.css)) — six palettes (`cove`, `atelier`, `botanic`, `tide`, `riso`, `cabin`), light/dark via `[data-theme]`, density via `[data-density]`, font families.
+- **Base + prose** ([src/styles/components.css](packages/design-system/src/styles/components.css)) — `.atlas-root` reset and `.prose` typography. Scoped so it doesn't leak into host chrome.
+- **Primitives** — `Button`, `IconButton`, `Badge`, `Surface`, `Input`, `TabGroup`, `Avatar`, `Kbd`, `Callout`, `CodeBlock`, `Markdown`, plus the `Icon` set.
+
+Usage from an app:
+
+```ts
+// 1. Add to deps
+// pnpm --filter <app> add @atlantis/design-system react react-dom
+
+// 2. Load styles once at app entry
+import "@atlantis/design-system/styles/tokens.css";
+import "@atlantis/design-system/styles/components.css";
+
+// 3. Mount under a themed root and import components
+import { Button, Markdown } from "@atlantis/design-system";
+```
+
+Then wrap your app in `<div className="atlas-root" data-palette="cove" data-theme="light" data-density="comfy">…</div>`.
+
+`Markdown` accepts a string of markdown and renders it inside `.prose`, mapping fenced code to `CodeBlock` and GitHub-style `> [!NOTE]` blockquotes to `Callout`.
 
 ### ESLint + Prettier
 

@@ -29,9 +29,9 @@ function createConfig({ appDir, name, port, federation, devServer = {} }) {
       path: path.resolve(appDir, "dist"),
       uniqueName: name,
     },
-    resolve: { extensions: [".ts", ".js"] },
+    resolve: { extensions: [".ts", ".tsx", ".js", ".jsx"] },
     module: {
-      rules: [{ test: /\.ts$/, use: "ts-loader", exclude: /node_modules/ }],
+      rules: [{ test: /\.tsx?$/, use: "ts-loader", exclude: /node_modules/ }],
     },
     plugins: [
       new ModuleFederationPlugin({ name, ...federation }),
