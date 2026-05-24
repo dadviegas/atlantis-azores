@@ -65,6 +65,13 @@ Layers:
 - **Tokens** ([src/styles/tokens.css](packages/design-system/src/styles/tokens.css)) — six palettes (`cove`, `atelier`, `botanic`, `tide`, `riso`, `cabin`), light/dark via `[data-theme]`, density via `[data-density]`, font families.
 - **Base + prose** ([src/styles/components.css](packages/design-system/src/styles/components.css)) — `.atlas-root` reset and `.prose` typography. Scoped so it doesn't leak into host chrome.
 - **Primitives** — `Button`, `IconButton`, `Badge`, `Surface`, `Input`, `TabGroup`, `Avatar`, `Kbd`, `Callout`, `CodeBlock`, `Markdown`, plus the `Icon` set.
+- **Atlas (LeafyGreen)** — MongoDB's [`@leafygreen-ui/*`](https://www.mongodb.design/) components re-exported under a subpath so they don't collide with the bespoke primitives. Starter set: `Button`, typography (`Body`, `H1`–`H3`, `Subtitle`), `Icon`, plus `LeafyGreenProvider`.
+
+```ts
+import { Button, Body, Icon } from "@atlantis/design-system/atlas";
+```
+
+The wrappers are pure re-exports — add another LG package to [src/atlas/index.ts](packages/design-system/src/atlas/index.ts) when you need it. React 18 and `@atlantis/design-system` are shared as Module Federation singletons (see [rspack.shared.cjs](rspack.shared.cjs)), so a single React instance backs both host and remote.
 
 Usage from an app:
 
@@ -111,7 +118,7 @@ On `pnpm dev` each app prints a banner with its URL once its dev server is liste
 1. Browser hits `http://localhost:3000/` → host's `index.html` loads.
 2. Host bundle boots ([apps/host/src/index.ts](apps/host/src/index.ts)) and dynamically imports `./bootstrap` (required by MF so shared deps can initialize first).
 3. `bootstrap.ts` does `import { mountButton } from "remote/Button"`. MF runtime fetches `http://localhost:3001/remoteEntry.js`, then the chunk containing `Button.ts`.
-4. `mountButton` runs in the host's page and appends a `<button>` to `#root`.
+4. `mountButton` runs in the host's page, creates a React root on `#root`, and renders a LeafyGreen `<Button>` from `@atlantis/design-system/atlas`. React is loaded once via MF's shared scope, regardless of which app booted first.
 
 Open both http://localhost:3000 (federated) and http://localhost:3001 (remote standalone) to see the same component in both contexts.
 

@@ -7,7 +7,7 @@ module.exports = createConfig({
   federation: {
     filename: "remoteEntry.js",
     exposes: {
-      "./Button": "./src/Button.ts",
+      "./Button": "./src/Button.tsx",
     },
   },
   devServer: {

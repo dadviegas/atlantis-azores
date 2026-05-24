@@ -7,6 +7,7 @@
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./atlas": "./src/atlas/index.ts",
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./styles/components.css": "./src/styles/components.css"
   },
@@ -14,6 +15,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@leafygreen-ui/button": "^21.2.1",
+    "@leafygreen-ui/icon": "^12.6.0",
+    "@leafygreen-ui/leafygreen-provider": "^3.1.12",
+    "@leafygreen-ui/typography": "^19.2.1",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0"
   },
