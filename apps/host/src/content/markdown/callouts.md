@@ -24,3 +24,26 @@ Plain blockquotes without an alert directive render as regular blockquotes:
 
 > Atlas is a fully managed cloud database service. You worry about the data,
 > we worry about the infrastructure.
+
+## Collapsible details
+
+Use `<details>` + `<summary>` to hide secondary content behind a disclosure.
+
+<details>
+<summary>What happens during a tier change?</summary>
+
+Atlas performs a rolling upgrade across replica set members:
+
+1. Sync the new node from the primary
+2. Step down and promote the new node
+3. Repeat for remaining secondaries
+
+Total time depends on data size; expect a few minutes per node on M30+.
+</details>
+
+<details>
+<summary>How is backup billed?</summary>
+
+Continuous Cloud Backups are billed per GB of snapshot storage. Pausing the
+cluster does **not** pause backup storage charges.
+</details>

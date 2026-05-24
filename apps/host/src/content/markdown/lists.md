@@ -22,3 +22,11 @@
 - [x] Add network access
 - [ ] Configure backup policy
 - [ ] Enable Atlas Search
+
+## Footnotes (GFM)
+
+Atlas runs on AWS, GCP, and Azure[^providers]. Multi-region deployments are
+supported across all three[^regions].
+
+[^providers]: All three are first-class — same API surface across providers.
+[^regions]: Cross-region replication adds latency; check the placement guide.

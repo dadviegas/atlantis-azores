@@ -1,15 +1,16 @@
 # atlantis-azores
 
-A minimal **micro-frontend** scaffold: two TypeScript apps built with **Rspack** and wired together at runtime via **Module Federation**, managed as a **pnpm workspace** monorepo.
+A **micro-frontend** scaffold: two React + TypeScript apps built with **Rspack** and wired together at runtime via **Module Federation**, managed as a **pnpm workspace** monorepo. The host renders an Atlas-themed dashboard that composes a bespoke design system and MongoDB's LeafyGreen components, and consumes a federated panel from the remote.
 
 ```
 atlantis-azores/
 ├── apps/
-│   ├── host/             → shell app    (http://localhost:3000)
-│   └── remote/           → exposes UI   (http://localhost:3001)
+│   ├── host/             → shell app + Atlas dashboard (http://localhost:3000)
+│   └── remote/           → exposes federated Button     (http://localhost:3001)
 ├── packages/
-│   └── design-system/    → @atlantis/design-system (tokens + React primitives)
-├── rspack.shared.cjs     → shared Rspack config factory
+│   └── design-system/    → @atlantis/design-system (tokens, React primitives, Markdown, Mermaid)
+├── stubs/                → browser-side stubs (e.g. @emotion/server)
+├── rspack.shared.cjs     → shared Rspack config factory (SWC, CSS, MF singletons)
 ├── tsconfig.base.json    → shared TS compiler options
 ├── eslint.config.js      → flat ESLint config (workspace-wide)
 └── pnpm-workspace.yaml
@@ -28,16 +29,22 @@ Why pnpm over npm/yarn:
 - **Strict by default**: a package can only import what it explicitly declares in its `package.json` — no accidental reliance on hoisted deps.
 - **Fast** workspace-aware scripts: `pnpm -r --parallel run dev` runs `dev` in every package at once.
 
-Because pnpm doesn't hoist, each app declares its own build deps (`@rspack/*`, `ts-loader`, etc.). Only tooling shared across the whole repo (eslint, prettier, typescript) lives at the root.
+Because pnpm doesn't hoist, each app declares its own build deps (`@rspack/*`, react, etc.). Only tooling shared across the whole repo (eslint, prettier, typescript) lives at the root.
 
 ### Rspack
 
-[Rspack](https://rspack.dev) is a Rust-based bundler with a Webpack-compatible API. We use it for two reasons:
+[Rspack](https://rspack.dev) is a Rust-based bundler with a Webpack-compatible API. We use it for three reasons:
 
 1. **Speed** — cold start and rebuilds are an order of magnitude faster than Webpack on the same config.
 2. **Native Module Federation support** via `@module-federation/enhanced/rspack`, kept in lockstep with the MF 2.0 spec.
+3. **Bundled toolchain** — `builtin:swc-loader` for TS/TSX, `css/auto` for CSS, and `asset/source` for `.md` files, all without extra deps.
 
 The config is plain CommonJS (`.cjs`) so it loads without `"type": "module"` gymnastics. Shared config lives in [rspack.shared.cjs](rspack.shared.cjs) as a `createConfig({ name, port, federation })` factory; each app's [rspack.config.cjs](apps/host/rspack.config.cjs) is ~10 lines of differences.
+
+The shared config also:
+
+- Declares **MF singletons** for `react`, `react-dom`, and `@atlantis/design-system` so a single React tree owns the federated page.
+- Aliases `@emotion/server/create-instance` to a browser stub at [stubs/emotion-server-create-instance.js](stubs/emotion-server-create-instance.js) — `@leafygreen-ui/emotion` unconditionally imports it for SSR critical-CSS extraction, which otherwise pulls a node-stream chain (`through`, `readable-stream`, `Buffer`) into the browser bundle.
 
 ### Module Federation
 
@@ -45,16 +52,16 @@ Module Federation lets separately-built bundles import code from each other **at
 
 **Two roles:**
 
-- A **remote** (`apps/remote`) builds a manifest file `remoteEntry.js` listing the modules it `exposes`. Example: `"./Button": "./src/Button.ts"`.
+- A **remote** (`apps/remote`) builds a manifest file `remoteEntry.js` listing the modules it `exposes`. Example: `"./Button": "./src/Button.tsx"`.
 - A **host** (`apps/host`) declares `remotes: { remote: "remote@http://localhost:3001/remoteEntry.js" }`. At runtime it fetches that manifest and lets code `import { mountButton } from "remote/Button"` as if it were a local module.
 
 **Why it matters:** host and remote are deployed and versioned independently. Ship a new version of `remote` and the running host picks it up on next page load — no host rebuild. This is how teams own slices of a larger app without coordinating release trains.
 
-The TS contract for the federated import lives in [apps/host/src/remote.d.ts](apps/host/src/remote.d.ts) — treat it as the public API of the remote.
+The federated `mountButton(target, label)` creates a React root on the target (cached per element in a `WeakMap`, so repeat calls re-render the same root) and renders a LeafyGreen `<Button>` wrapped in `LeafyGreenProvider`. React, ReactDOM, and the design system are shared as MF singletons, so the federated chunk doesn't ship its own copy. The TS contract for the federated import lives in [apps/host/src/remote.d.ts](apps/host/src/remote.d.ts) — treat it as the public API of the remote.
 
 ### TypeScript
 
-`strict` is on across the workspace via [tsconfig.base.json](tsconfig.base.json), which each app extends. `ts-loader` compiles inside Rspack; there's no separate `tsc` build step in the dev loop.
+`strict` is on across the workspace via [tsconfig.base.json](tsconfig.base.json), which each app extends. `builtin:swc-loader` does the actual transpilation inside Rspack (faster than ts-loader, no rootDir constraints across workspace packages); there's no separate `tsc` build step in the dev loop.
 
 ### Design system
 
@@ -64,14 +71,14 @@ Layers:
 
 - **Tokens** ([src/styles/tokens.css](packages/design-system/src/styles/tokens.css)) — six palettes (`cove`, `atelier`, `botanic`, `tide`, `riso`, `cabin`), light/dark via `[data-theme]`, density via `[data-density]`, font families.
 - **Base + prose** ([src/styles/components.css](packages/design-system/src/styles/components.css)) — `.atlas-root` reset and `.prose` typography. Scoped so it doesn't leak into host chrome.
-- **Primitives** — `Button`, `IconButton`, `Badge`, `Surface`, `Input`, `TabGroup`, `Avatar`, `Kbd`, `Callout`, `CodeBlock`, `Markdown`, plus the `Icon` set.
-- **Atlas (LeafyGreen)** — MongoDB's [`@leafygreen-ui/*`](https://www.mongodb.design/) components re-exported under a subpath so they don't collide with the bespoke primitives. Starter set: `Button`, typography (`Body`, `H1`–`H3`, `Subtitle`), `Icon`, plus `LeafyGreenProvider`.
+- **Primitives** — `Button`, `IconButton`, `Badge`, `Surface`, `Input`, `TabGroup`, `Avatar`, `Kbd`, `Callout`, `CodeBlock`, `Markdown`, `Mermaid`, plus the `Icon` set.
+- **Atlas (LeafyGreen)** — MongoDB's [`@leafygreen-ui/*`](https://www.mongodb.design/) components re-exported under a subpath so they don't collide with the bespoke primitives. Starter set: `Button`, typography (`Body`, `H1`–`H3`, `Subtitle`, `Description`, `Label`), `Icon`, plus `LeafyGreenProvider`.
 
 ```ts
 import { Button, Body, Icon } from "@atlantis/design-system/atlas";
 ```
 
-The wrappers are pure re-exports — add another LG package to [src/atlas/index.ts](packages/design-system/src/atlas/index.ts) when you need it. React 18 and `@atlantis/design-system` are shared as Module Federation singletons (see [rspack.shared.cjs](rspack.shared.cjs)), so a single React instance backs both host and remote.
+The wrappers are pure re-exports — add another LG package to [src/atlas/index.ts](packages/design-system/src/atlas/index.ts) when you need it.
 
 Usage from an app:
 
@@ -89,7 +96,27 @@ import { Button, Markdown } from "@atlantis/design-system";
 
 Then wrap your app in `<div className="atlas-root" data-palette="cove" data-theme="light" data-density="comfy">…</div>`.
 
-`Markdown` accepts a string of markdown and renders it inside `.prose`, mapping fenced code to `CodeBlock` and GitHub-style `> [!NOTE]` blockquotes to `Callout`.
+### Markdown + Mermaid
+
+`<Markdown>` wraps `react-markdown` with `remark-gfm` (tables, task lists, footnotes, GitHub alerts) and `rehype-raw` (so embedded HTML like `<mark>`, `<details>`, `<sub>` renders). It maps:
+
+- Fenced code with `language-mermaid` → `<Mermaid>` (lazy-loads the `mermaid` library, themes itself from the active palette CSS vars, caps the SVG to ~640×360).
+- Fenced code with any other language → `<CodeBlock>` (syntax-tokenized).
+- GitHub-style alert blockquotes (`> [!NOTE] / [!TIP] / [!WARNING] / [!DANGER] / [!SUCCESS]`) → `<Callout>`.
+- `<kbd>` → `<Kbd>`.
+
+The `.prose` styles cover headings (h1–h6), lists (with decaying bullets for nesting), GFM task-list checkboxes, tables, blockquotes, code, `hr`, `<mark>`, `<del>`, `<details>` + `<summary>`, footnotes, and responsive images.
+
+### The Atlas dashboard
+
+[apps/host/src/Dashboard.tsx](apps/host/src/Dashboard.tsx) renders a themed micro-app with an Atlas-style left rail (Overview, Database, Search, Triggers, Charts, Documentation, Markdown, Architecture, Settings) and a header (theme toggle + avatar). State that survives reloads lives in `localStorage`:
+
+- `atlas.theme` — `"light"` / `"dark"`
+- `atlas.view` — current left-nav selection
+- `atlas.doc` — active tab in Documentation
+- `atlas.md`  — active tab in Markdown
+
+The **Markdown** view is a self-documenting showcase: each tab loads a separate `.md` file from [apps/host/src/content/markdown/](apps/host/src/content/markdown/) via Rspack's `asset/source` rule, then renders it through the bespoke `<Markdown>` component. The **Architecture** view does the same with [architecture.md](apps/host/src/content/architecture.md), which uses Mermaid for the runtime topology, boot sequence, and build pipeline diagrams. The **Federated panel** in Overview embeds `remote/Button`.
 
 ### ESLint + Prettier
 
@@ -117,10 +144,11 @@ On `pnpm dev` each app prints a banner with its URL once its dev server is liste
 
 1. Browser hits `http://localhost:3000/` → host's `index.html` loads.
 2. Host bundle boots ([apps/host/src/index.ts](apps/host/src/index.ts)) and dynamically imports `./bootstrap` (required by MF so shared deps can initialize first).
-3. `bootstrap.ts` does `import { mountButton } from "remote/Button"`. MF runtime fetches `http://localhost:3001/remoteEntry.js`, then the chunk containing `Button.ts`.
-4. `mountButton` runs in the host's page, creates a React root on `#root`, and renders a LeafyGreen `<Button>` from `@atlantis/design-system/atlas`. React is loaded once via MF's shared scope, regardless of which app booted first.
+3. [bootstrap.tsx](apps/host/src/bootstrap.tsx) loads `tokens.css` + `components.css`, wraps everything in `LeafyGreenProvider`, and `createRoot(#root).render(<Dashboard />)`.
+4. `<Dashboard />` renders the sidebar + main view. When the user is on Overview, an effect calls `mountButton(ref, "Open in Compass")` on a host-owned `<div>`. MF runtime fetches `http://localhost:3001/remoteEntry.js`, then the chunk containing `Button.tsx`.
+5. `mountButton` creates (or reuses, via `WeakMap`) a React root on the target and renders a LeafyGreen `<Button>` inside `LeafyGreenProvider`. React is loaded once via MF's shared scope.
 
-Open both http://localhost:3000 (federated) and http://localhost:3001 (remote standalone) to see the same component in both contexts.
+Open both http://localhost:3000 (federated dashboard) and http://localhost:3001 (remote standalone) to see the federated component in both contexts.
 
 ---
 

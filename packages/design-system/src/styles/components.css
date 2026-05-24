@@ -26,17 +26,7 @@
 .atlas-root a { color: var(--accent); text-decoration: none; }
 .atlas-root a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-.prose { color: var(--ink); }
-.prose > p,
-.prose > ul,
-.prose > ol,
-.prose > h1,
-.prose > h2,
-.prose > h3,
-.prose > h4,
-.prose > h5,
-.prose > h6,
-.prose > blockquote { max-width: 70ch; }
+.prose { color: var(--ink); width: 100%; }
 .prose h1, .prose h2, .prose h3, .prose h4 {
   font-family: var(--font-display);
   font-weight: 600; letter-spacing: -0.02em; line-height: 1.15;
@@ -74,10 +64,15 @@
   font-variation-settings: '"opsz" 30'; }
 .prose h4 { font-size: calc(1.05em * var(--d)); margin-top: 1.2em; color: var(--ink-2);
   text-transform: uppercase; letter-spacing: .12em; font-size: .82em; font-weight: 600; }
+.prose h5 { font-size: .95em; margin: 1em 0 .3em; color: var(--ink); font-weight: 600; }
+.prose h6 { font-size: .82em; margin: 1em 0 .3em; color: var(--ink-2); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em; }
 .prose p { margin: 0 0 1em; line-height: 1.65; }
 .prose p, .prose li { text-wrap: pretty; }
 .prose strong { font-weight: 600; color: var(--ink); }
 .prose em { font-style: italic; }
+.prose del, .prose s { color: var(--ink-3); text-decoration-thickness: 1.5px; }
+.prose mark { background: var(--accent-soft); color: var(--ink); padding: 0 .2em; border-radius: 3px; }
 
 .prose ul, .prose ol { margin: 0 0 1em; padding-left: 1.4em; }
 .prose ul li, .prose ol li { margin: .25em 0; line-height: 1.6; }
@@ -87,6 +82,35 @@
   content: ''; position: absolute; left: 0; top: .65em;
   width: .35em; height: .35em; border-radius: 50%;
   background: var(--primary);
+}
+.prose ul ul > li::before { background: var(--ink-3); width: .3em; height: .3em; }
+.prose ul ul ul > li::before { background: transparent; border: 1px solid var(--ink-3); }
+
+/* GFM task list: drop the custom bullet and dress the checkbox */
+.prose ul > li:has(> input[type="checkbox"]) { padding-left: 0; }
+.prose ul > li:has(> input[type="checkbox"])::before { content: none; }
+.prose input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none;
+  width: 1em; height: 1em;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  vertical-align: -2px;
+  margin-right: .5em;
+  cursor: default;
+  position: relative;
+}
+.prose input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.prose input[type="checkbox"]:checked::after {
+  content: ''; position: absolute;
+  left: 3px; top: 0px;
+  width: 4px; height: 8px;
+  border: solid var(--surface);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .prose blockquote {
@@ -144,6 +168,14 @@
 .prose tbody tr:last-child td { border-bottom: 0; }
 .prose tbody tr:hover { background: var(--surface-2); }
 
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  display: block;
+  margin: 1.2em auto;
+}
 .prose figure { margin: 1.4em 0; }
 .prose figcaption {
   font-size: .85em;
@@ -152,6 +184,36 @@
   margin-top: .6em;
   font-style: italic;
 }
+
+.prose details {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .6em .9em;
+  margin: 1em 0;
+  background: var(--surface);
+}
+.prose details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: .5em;
+}
+.prose details > summary::-webkit-details-marker { display: none; }
+.prose details > summary::before {
+  content: '▸';
+  color: var(--ink-3);
+  transition: transform .15s;
+  display: inline-block;
+}
+.prose details[open] > summary::before { transform: rotate(90deg); }
+
+.prose sup a { font-size: .75em; padding: 0 .15em; }
+.prose .footnotes { font-size: .9em; color: var(--ink-2); margin-top: 2em;
+  border-top: 1px solid var(--border); padding-top: 1em; }
+.prose .footnotes ol { padding-left: 1.2em; }
 
 .prose a { border-bottom: 1px dotted var(--accent); }
 .prose a:hover { border-bottom-style: solid; text-decoration: none; }
