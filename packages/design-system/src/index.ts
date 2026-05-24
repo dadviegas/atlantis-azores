@@ -32,3 +32,6 @@ export type { CodeBlockProps, TokenKind, TProps } from './components/CodeBlock';
 
 export { Markdown } from './components/Markdown';
 export type { MarkdownProps } from './components/Markdown';
+
+export { Mermaid } from './components/Mermaid';
+export type { MermaidProps } from './components/Mermaid';

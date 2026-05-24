@@ -92,3 +92,28 @@ Press <kbd>Cmd</kbd> + <kbd>K</kbd> to open the command palette.
 
 > Atlas is a fully managed cloud database service. You worry about the data,
 > we worry about the infrastructure.
+
+## Mermaid diagrams
+
+Fenced blocks tagged ` ```mermaid ` are rendered as live SVG diagrams:
+
+```mermaid
+flowchart LR
+  A[Client] -->|connect| B((SRV))
+  B --> C[(Primary)]
+  C --> D[(Secondary)]
+  C --> E[(Secondary)]
+  D -.replicate.-> C
+  E -.replicate.-> C
+```
+
+```mermaid
+sequenceDiagram
+  participant App
+  participant Atlas
+  participant Cluster
+  App->>Atlas: GET /clusters
+  Atlas->>Cluster: status?
+  Cluster-->>Atlas: healthy
+  Atlas-->>App: 200 OK
+```

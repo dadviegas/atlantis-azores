@@ -5,6 +5,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { CodeBlock } from './CodeBlock';
 import { Callout, type CalloutKind } from './Callout';
 import { Kbd } from './Kbd';
+import { Mermaid } from './Mermaid';
 
 export interface MarkdownProps {
   children: string;
@@ -47,7 +48,11 @@ const components: Components = {
     if (!langMatch) {
       return <code className={className}>{children}</code>;
     }
-    return <CodeBlock lang={langMatch[1]}>{String(children).replace(/\n$/, '')}</CodeBlock>;
+    const source = String(children).replace(/\n$/, '');
+    if (langMatch[1] === 'mermaid') {
+      return <Mermaid>{source}</Mermaid>;
+    }
+    return <CodeBlock lang={langMatch[1]}>{source}</CodeBlock>;
   },
   blockquote({ children }) {
     const callout = extractCalloutKind(children);
