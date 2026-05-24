@@ -35,3 +35,6 @@ export type { MarkdownProps } from './components/Markdown';
 
 export { Mermaid } from './components/Mermaid';
 export type { MermaidProps } from './components/Mermaid';
+
+export { StatGrid, Steps, Compare, Quote, Meters, KeyValueGrid } from './components/Infographic';
+export type { StatItem, Step, CompareCol, MeterItem, KeyValueItem } from './components/Infographic';

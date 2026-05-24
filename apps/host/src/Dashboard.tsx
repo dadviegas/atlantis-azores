@@ -29,6 +29,7 @@ import mdCode from "./content/markdown/code.md";
 import mdCallouts from "./content/markdown/callouts.md";
 import mdKbd from "./content/markdown/kbd.md";
 import mdMermaid from "./content/markdown/mermaid.md";
+import mdInfographics from "./content/markdown/infographics.md";
 
 type Theme = "light" | "dark";
 type View =
@@ -57,7 +58,8 @@ type MdFeature =
   | "code"
   | "callouts"
   | "kbd"
-  | "mermaid";
+  | "mermaid"
+  | "infographics";
 const mdSources: Record<MdFeature, string> = {
   inline: mdInline,
   headings: mdHeadings,
@@ -67,6 +69,7 @@ const mdSources: Record<MdFeature, string> = {
   callouts: mdCallouts,
   kbd: mdKbd,
   mermaid: mdMermaid,
+  infographics: mdInfographics,
 };
 const mdTabs = [
   { id: "inline" as const, label: "Inline" },
@@ -77,6 +80,7 @@ const mdTabs = [
   { id: "callouts" as const, label: "Callouts" },
   { id: "kbd" as const, label: "Keyboard" },
   { id: "mermaid" as const, label: "Mermaid" },
+  { id: "infographics" as const, label: "Infographics" },
 ];
 
 const THEME_KEY = "atlas.theme";
@@ -249,7 +253,8 @@ function isMdFeature(v: string | null): v is MdFeature {
     v === "code" ||
     v === "callouts" ||
     v === "kbd" ||
-    v === "mermaid"
+    v === "mermaid" ||
+    v === "infographics"
   );
 }
 
